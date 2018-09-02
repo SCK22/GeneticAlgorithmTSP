@@ -16,6 +16,7 @@ General flow of solving a problem using Genetic Algorithm
                         perform recombination and mutation;
                         evaluate population;
                       }
+                }
 
 Initialize population:
 The initial population is a set of random routes generated using numpy.
