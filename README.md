@@ -50,3 +50,4 @@ Final:
 <img src = "img/final.PNG" >
 
 _Note: The final solution was obtained after multiple runs of the Genetic Algorithm with different inital population sizes and overall runs._
+
