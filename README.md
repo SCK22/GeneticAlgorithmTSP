@@ -17,7 +17,8 @@ General flow of solving a problem using Genetic Algorithm
 
 Initialize population:
 The initial population is a set of random routes generated using numpy.
-<img src = "img/route_generation.png">
+
+<img src = "img/route_generation.png" >
 
 Evaluate population:
 The evaluation is a process of finding how good the solutions is. This is <img src = "img/initial_population_cost.png">
