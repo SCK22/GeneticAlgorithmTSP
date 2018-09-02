@@ -37,7 +37,7 @@ OverallRun:
 
 <img src = "img/overall_run.PNG" >
 
-## The solution obtained from Running Genetic algorithm
+## The solution obtained from running Genetic algorithm
 
 Starting:
 
