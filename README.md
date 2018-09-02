@@ -6,6 +6,7 @@ Programming Language : Python
 Number of cities : 11
 
 General flow of solving a problem using Genetic Algorithm
+
                 {
                   initialize population;
                   evaluate population;
