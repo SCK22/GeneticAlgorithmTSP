@@ -41,7 +41,7 @@ OverallRun:
 
 Starting:
 
-<img src = "img/start.png" > <img src = "img/final.PNG" >
+<img src = "img/start.png" >
 
 Final:
 
