@@ -11,11 +11,11 @@ General flow of solving a problem using Genetic Algorithm
                   initialize population;
                   evaluate population;
                   while TerminationCriteriaNotSatisfied
-                {
-                  select parents for reproduction;
-                  perform recombination and mutation;
-                  evaluate population;
-                }
+                      {
+                        select parents for reproduction;
+                        perform recombination and mutation;
+                        evaluate population;
+                      }
 
 Initialize population:
 The initial population is a set of random routes generated using numpy.
