@@ -17,3 +17,5 @@ General flow of solving a problem using Genetic Algorithm
 
 Initialize population:
 The initial population is a set of random routes generated using numpy.
+
+
