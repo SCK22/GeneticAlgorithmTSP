@@ -85,8 +85,26 @@ class GeneticAlgorithmTSP:
         return elite_few
 
     def getMutatedPath(self, initPath, mutateFactor):
-        """ This functions generates a mutated path , takes an input path and returns a mutated path.
-        Mutate factor is the point at which the string(route here) is split and the two parts are swapped."""
+            """ This functions generates a mutated path , takes an input path and returns a mutated path.
+                Mutate factor is the point at which the string (route here) is split and the two parts are swapped.
+
+                    Mutation
+                    Step 1: Pick a parent chromosome
+                    Step 2: Randomly pick an index (position in the parent chromosome)
+                    Step 3: Swap the values before and after the index to generate the mutated chromosome (child).
+
+                Ex: 
+                    input to the function:        
+                        parent = [4, 6, 2, 8, 3, 5, 7, 1, 9, 10]
+                        index = 3 (randomy generate the index)
+
+                    output:
+                        child  = [8, 3, 5, 7, 1, 9, 10, 4, 6, 2]
+
+                Implemetation:
+                    getMutatedPath(initPath = [4, 6, 2, 8, 3, 5, 7, 1, 9, 10], mutateFactor = 3)
+                    output: [8, 3, 5, 7, 1, 9, 10, 4, 6, 2].
+            """
         try:
             temp1 = initPath[0:mutateFactor]
             temp2 = initPath[mutateFactor:len(initPath)]
@@ -115,6 +133,35 @@ class GeneticAlgorithmTSP:
     
     def crossOverFunction(self, parent1, parent2,crossover_factor_start_pos=2,
                              crossover_factor_end_pos=6):
+            """This function implements the partially mapped crossover by goldeberg (https://www.hindawi.com/journals/cin/2017/7430125/)
+    
+                inputs: 2 parent solutions, crossover start position, crossover end position.
+                crossover start position and  crossover end position are randomly generated in the solution.
+
+                output: 2 child solutions, i.e the crossedover solutions.
+                Example :
+
+                    Inputs:
+                        p1 = [5,7,2,4,8,9,3,6]
+                        p2 = [8,6,9,3,2,5,7,4]
+                        crossover_start_pos 2 (randomly selected)
+                        crossover_end_pos 6 (randomly selected)
+                    Internals:
+                        The mapping created is [(2, 9), (4, 3), (8, 2), (9, 5)]
+                        Child1 Intermediate [9, 7, 9, 3, 2, 5, 4, 6]
+                        Child1 Intermediate [2, 7, 9, 3, 2, 5, 4, 6]
+                        Child1 Intermediate [8, 7, 9, 3, 2, 5, 4, 6]
+                        Child1 final [8, 7, 9, 3, 2, 5, 4, 6]
+                        Child2 original [8, 6, 2, 4, 8, 9, 7, 4]
+                        Child2 Intermediate [2, 6, 2, 4, 8, 9, 7, 3]
+                        Child2 Intermediate [9, 6, 2, 4, 8, 9, 7, 3]
+                        Child2 Intermediate [5, 6, 2, 4, 8, 9, 7, 3]
+                        Child2 final [5, 6, 2, 4, 8, 9, 7, 3]
+
+                    Output:
+                        Child: [8, 7, 9, 3, 2, 5, 4, 6]
+                        Child: [5, 6, 2, 4, 8, 9, 7, 3].
+               """
         indexes_for_crossover = random.sample(set(range(len(parent1))), 2)
         crossover_factor_start_pos,crossover_factor_end_pos = min(indexes_for_crossover),max(indexes_for_crossover)
         ## generate child 1
@@ -150,7 +197,6 @@ class GeneticAlgorithmTSP:
             child2 = child2_part[:crossover_factor_start_pos] + child2[crossover_factor_start_pos:crossover_factor_end_pos]+         child2_part[crossover_factor_start_pos:]
 
         return( child1,child2)
-
 
     def routesAfterCrossOver(self):
         """This functions takes in a population and performs crossover on the top_per records.
