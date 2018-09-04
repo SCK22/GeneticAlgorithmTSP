@@ -49,9 +49,15 @@ Implemented PMX by goldberg - https://www.hindawi.com/journals/cin/2017/7430125/
 
 <img src = "img/pmxcrossover_exp.jpg" >
 
-OverallRun:
-
-<img src = "img/overall_run.PNG" >
+### OverallRun:
+          ga_obj = GeneticAlgoLibrary.OverallGaRun(noverall=1,
+                                         number_of_cities=11,
+                                         initial_pop_size=1000,
+                                         nelite=10,
+                                         percentage_to_crossover=20,
+                                         percentage_to_mutate=20,
+                                         dist_mat=data1)
+        
 
 ## The solution obtained from running Genetic algorithm
 
