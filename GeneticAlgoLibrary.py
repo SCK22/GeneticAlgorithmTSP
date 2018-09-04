@@ -222,7 +222,7 @@ class OverallGaRun(GeneticAlgorithmTSP):
 		self.cities_mapping = cities_mapping
 
 	def runOverallGa(self):
-		possible_solutions = math.factorial(10)
+		possible_solutions = math.factorial(self.number_of_cities-1)
 		ninitpop = self.initial_pop_size
 		## create an empty dataframe to store the solutions
 		all_solutions_generated = pd.DataFrame(columns=['Route','Cost'])
