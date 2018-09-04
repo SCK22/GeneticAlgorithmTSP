@@ -3,3 +3,4 @@ matplotlib==2.2.2
 mpmath==1.0.0
 numpy==1.13.3
 pandas==0.22.0
+# to install basemap, run conda install basemap
