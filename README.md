@@ -75,7 +75,7 @@ Starting:
 
 Final:
 
-<img src = "img/final.PNG" >
+<img src = "img/final.png" >
 
 _Note:_
 
