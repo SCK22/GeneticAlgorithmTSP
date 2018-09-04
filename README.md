@@ -18,10 +18,18 @@ General flow of solving a problem using Genetic Algorithm
                       }
                 }
 
-## run the following line before proceeding :
+## run the following lines before proceeding :
   pip install -r requirements.txt
   conda install basemap
   
+
+
+# pass this data frame to the genetic algorithm function as dist_data
+    data1 = pd.read_csv("data/cities_and_distances.csv")
+    data1.reset_index(inplace=True)
+    data1 = data.iloc[:,2:]
+    data1.index = data1.columns.values
+    data1
 Initialize population:
 The initial population is a set of random routes generated using numpy.
 
