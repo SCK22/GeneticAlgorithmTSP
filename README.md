@@ -18,6 +18,10 @@ General flow of solving a problem using Genetic Algorithm
                       }
                 }
 
+## run the following line before proceeding :
+  pip install -r requirements.txt
+  conda install basemap
+  
 Initialize population:
 The initial population is a set of random routes generated using numpy.
 
