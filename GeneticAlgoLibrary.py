@@ -13,7 +13,7 @@ class GeneticAlgorithmTSP:
 			import random # library to generate random numbers
 			np.random.seed(seed=42)
 			import matplotlib.pyplot as plt # For plotting
-			import math
+			import math as m
 			get_ipython().magic('matplotlib notebook')
 			import matplotlib.pyplot as plt
 			from mpl_toolkits.basemap import Basemap
@@ -221,7 +221,7 @@ class OverallGaRun(GeneticAlgorithmTSP):
 		self.cities_mapping = cities_mapping
 
 	def runOverallGa(self):
-		possible_solutions = math.factorial(self.number_of_cities-1)
+		possible_solutions = m.factorial(self.number_of_cities-1)
 		ninitpop = self.initial_pop_size
 		## create an empty dataframe to store the solutions
 		all_solutions_generated = pd.DataFrame(columns=['Route','Cost'])
