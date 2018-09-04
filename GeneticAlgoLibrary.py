@@ -13,7 +13,7 @@ class GeneticAlgorithmTSP:
 			import random # library to generate random numbers
 			np.random.seed(seed=42)
 			import matplotlib.pyplot as plt # For plotting
-			import math as m
+			from numpy import math as m
 			get_ipython().magic('matplotlib notebook')
 			import matplotlib.pyplot as plt
 			from mpl_toolkits.basemap import Basemap
