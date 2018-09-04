@@ -19,8 +19,8 @@ General flow of solving a problem using Genetic Algorithm
                 }
 
 ## run the following lines before proceeding :
-  pip install -r requirements.txt
-  conda install basemap
+    pip install -r requirements.txt
+    conda install basemap
   
 
 
