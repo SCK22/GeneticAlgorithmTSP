@@ -27,10 +27,10 @@ Evaluate population:
 The evaluation is a process of finding how good the solutions is. This is <img src = "img/initial_population_cost.PNG">
 
 Mutation:
+
 <img src = "img/mutation.gif">
+
 <img src = "img/mutation.PNG" >
-
-
 
 Crossover:
 Implemented PMX by goldberg - https://www.hindawi.com/journals/cin/2017/7430125/
