@@ -63,6 +63,6 @@ Final:
 
 <img src = "img/final.PNG" >
 
-_Note: 
-1. The final solution was obtained after multiple runs of the Genetic Algorithm with different inital population sizes and overall runs.
+_Note:_
+_1. The final solution was obtained after multiple runs of the Genetic Algorithm with different inital population sizes and overall runs.
 2. The map needs access to city_lat_lon data, in the code to the file that is availabe in the data folder, if you are running the code from a different folder, the path should be changed accordingly._
