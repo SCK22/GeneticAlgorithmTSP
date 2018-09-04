@@ -57,8 +57,16 @@ Implemented PMX by goldberg - https://www.hindawi.com/journals/cin/2017/7430125/
                                          percentage_to_crossover=20,
                                          percentage_to_mutate=20,
                                          dist_mat=data1)
-        
-
+### If you want to run the genetic algorithm with multiple runs
+      for i in [10,100,1000]:
+          ga_obj = GeneticAlgoLibrary.OverallGaRun(noverall=i,
+                                               number_of_cities=11,
+                                               initial_pop_size=1000,
+                                               nelite=10,
+                                               percentage_to_crossover=20,
+                                               percentage_to_mutate=20,
+                                               dist_mat=data1)
+          ga_obj.runOverallGa()
 ## The solution obtained from running Genetic algorithm
 
 Starting:
