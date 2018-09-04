@@ -24,7 +24,7 @@ General flow of solving a problem using Genetic Algorithm
   
 
 
-# pass this data frame to the genetic algorithm function as dist_data
+# pass this data frame to the genetic algorithm function as dist_mat
     data1 = pd.read_csv("data/cities_and_distances.csv")
     data1.reset_index(inplace=True)
     data1 = data.iloc[:,2:]
