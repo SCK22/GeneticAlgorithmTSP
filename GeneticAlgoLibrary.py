@@ -18,7 +18,6 @@ class GeneticAlgorithmTSP:
 			import matplotlib.pyplot as plt
 			from mpl_toolkits.basemap import Basemap
 			from geopy.geocoders import Nominatim
-			import math
 			import warnings
 			from IPython.display import HTML
 			with warnings.catch_warnings():
