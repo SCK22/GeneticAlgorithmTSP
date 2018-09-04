@@ -1,8 +1,8 @@
 #GeneticAlgorithmTSP#
 class GeneticAlgorithmTSP:
-
+	
 	"""This class implements all the methods required to apply genetic algorithm to Travelling Salesman Problem."""
-    
+    	from numpy import math as m
 	def __init__(self, number_of_cities, initial_pop_size, nelite, percentage_to_mutate,percentage_to_crossover, dist_mat):
 		"""Initialize the required values and import libraries"""
 		if __name__ != "__main__":
