@@ -297,7 +297,10 @@ if __name__ != "__main__":
 			np.random.seed(seed=42)
 			import matplotlib.pyplot as plt # For plotting
 			from numpy import math as m
-			get_ipython().magic('matplotlib notebook')
+			try:
+				get_ipython().magic('matplotlib notebook')
+			except:
+				pass
 			import matplotlib.pyplot as plt
 			try:
 				from mpl_toolkits.basemap import Basemap
