@@ -77,6 +77,7 @@ Final:
 
 <img src = "img/final.jpg" >
 
+
 _Note:_
 
 _1. The final solution was obtained after multiple runs of the Genetic Algorithm with different inital population sizes and overall runs._
