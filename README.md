@@ -61,7 +61,7 @@ Implemented PMX by goldberg - https://www.hindawi.com/journals/cin/2017/7430125/
       for i in [10,100,1000]:
           ga_obj = GeneticAlgoLibrary.OverallGaRun(noverall=i,
                                                number_of_cities=11,
-                                               initial_pop_size=1000,
+                                               initial_pop_size=10000,
                                                nelite=10,
                                                percentage_to_crossover=20,
                                                percentage_to_mutate=20,
