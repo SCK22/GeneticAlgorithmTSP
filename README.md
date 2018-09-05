@@ -75,7 +75,7 @@ Starting:
 
 Final:
 
-<img src = "img/final.jpg" >
+<img src = "img/final_sol.jpg" >
 
 
 _Note:_
