@@ -67,7 +67,7 @@ class GeneticAlgorithmTSP:
 	
 	def theEliteFew(self):
 		"""This functions picks 'nelite' number of best performing solutions.
-		Takes input of population sorted based on the cost and returns the top 'nelite'.
+		Takes input of population sorted based on the cost and returns the top 'nelite' solutions.
 		"""
 		elite_few = self.sorted_population.head(self.nelite)
 		self.elite_few_df = elite_few
