@@ -49,7 +49,7 @@ class GeneticAlgorithmTSP:
 	# Generate an initial population of random routes (generally we generate a large number of initial routes)
 	def initialPopCost(self):
 		"""This function calculates the cost of the route that is passed.
-        returns a dictionary of routes and the cost."""
+        returns a dataframe of routes and the cost."""
 		np.random.seed(seed=42)
 		ninitpop = self.initial_pop_size
 		intial_cost = 0
