@@ -86,7 +86,7 @@ class GeneticAlgorithmTSP:
     
 	def mutationFunction(self,df):
 		"""This function mutates n input routes where n is calculated based on the percentage_to_mutate and returns the 
-		corresponding solution generated and the cost."""
+		corresponding mutated solution and the cost."""
 		#random number for mutate factor
 		elite_few_df = df
 		p = int(round(elite_few_df.shape[0]*self.percentage_to_mutate,0))
