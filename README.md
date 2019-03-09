@@ -21,6 +21,7 @@ General flow of solving a problem using Genetic Algorithm
 ## run the following lines in terminal before proceeding :
     pip install -r requirements.txt
     conda install basemap
+    or run bash setup.sh (if running a linux based system)
   
 
 
