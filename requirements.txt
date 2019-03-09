@@ -1,5 +1,5 @@
 geopy==1.16.0
-matplotlib==2.2.2
+matplotlib
 numpy
-pandas==0.22.0
+pandas
 # to install basemap, run conda install basemap
