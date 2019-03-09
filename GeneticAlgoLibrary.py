@@ -218,12 +218,14 @@ class OverallGaRun(GeneticAlgorithmTSP):
 			sorted_init_pop = initial_pop_cost.sort_values('Cost')
 		else:
 			sorted_init_pop = all_solutions_generated.head(self.initial_pop_size)
-        # selecting the elite few
+    
+		# selecting the elite few
 		elite_few_df = self.theEliteFew()
 		best_sol = []
+		# Generating a random number based on which we either mutate or do a crossover
+		matingFactor = np.random.uniform(0,1,1) # Random pick to decide on Mutation / crossover
+		
 		for i in range(self.noverall):
-			# Generating a random number based on which we either mutate or do a crossover
-			matingFactor = np.random.uniform(0,1,1) # Random pick to decide on Mutation / crossover
 			if matingFactor < 0.15:
 				mutatedPopulationWthCost = self.mutationFunction(all_solutions_generated)
 				all_solutions_generated.append(mutatedPopulationWthCost)
