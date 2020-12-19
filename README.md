@@ -76,7 +76,7 @@ Starting:
 
 Final solution plotted with folium
 
-<img src = "img/final_sol.png" >
+<img src = "img/final_sol.PNG" >
 
 
 _Note:_
