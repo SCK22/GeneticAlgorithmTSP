@@ -380,13 +380,31 @@ if __name__ != "__main__":
     except ModuleNotFoundError:
         warnings.warn(
             """Could not load geopy,
-			the package is either not available for the os you are using or is not available in the scope of the class.This will not affect the functionality of the class,
+			the package is either not available for the os you are using or is not available 
+            in the scope of the class.This will not affect the functionality of the class,
 			you cannot generate plots""",
             stacklevel=1,
         )
-
-    from IPython.display import HTML
-
+    try:
+        import folium
+    except ModuleNotFoundError:
+        warnings.warn(
+            """Could not load folium,
+			the package is either not available for the os you are using or is not available
+            in the scope of the class.This will not affect the functionality of the class,
+			you cannot generate plots""",
+            stacklevel=1,
+        )
+    try:
+        from branca.element import Figure
+    except ModuleNotFoundError:
+        warnings.warn(
+            """Could not load branca,
+			the package is either not available for the os you are using or is not available
+            in the scope of the class.This will not affect the functionality of the class,
+			you cannot generate plots""",
+            stacklevel=1,
+        )
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
     from numpy import math as m

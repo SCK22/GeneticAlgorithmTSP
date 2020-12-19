@@ -2,4 +2,5 @@ geopy==1.16.0
 matplotlib
 numpy
 pandas
-# to install basemap, run conda install basemap
+branca=0.4.1
+folium=0.10.1
