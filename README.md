@@ -86,5 +86,5 @@ _1. The final solution was obtained after multiple runs of the Genetic Algorithm
 _2. The map needs access to city_lat_lon data, in the code to the file that is availabe in the data folder, if you are running the code from a different folder, the path should be changed accordingly._
 
 
-_3. basemap is now deprecated, will update the plots with new code when I find a package which can generate these kind of plots, if you have any suggestions, please forward them to [Chaithanya Kumar](mailto:chaithanyakumar.ds@gmail.com?subject=[GitHub][GeneeticAlgorithmTSP] plot library suggestion)
+_3. basemap is now deprecated, will update the plots with new code when I find a package which can generate these kind of plots, if you have any suggestions, please forward them to [Chaithanya Kumar](mailto:chaithanyakumar.ds@gmail.com?subject=[GitHub][GeneeticAlgorithmTSP]%20plot%20library%20suggestion)
 
