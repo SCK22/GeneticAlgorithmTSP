@@ -67,7 +67,7 @@ Implemented PMX by goldberg - https://www.hindawi.com/journals/cin/2017/7430125/
                                                percentage_to_crossover=20,
                                                percentage_to_mutate=20,
                                                dist_mat=data1)
-          ga_obj.runOverallGa()
+          ga_obj.run_overall_ga()
 ## The solution obtained from running Genetic algorithm
 
 Starting:

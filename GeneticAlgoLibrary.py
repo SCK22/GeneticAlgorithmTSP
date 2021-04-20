@@ -1,7 +1,19 @@
 # GeneticAlgorithmTSP#
+import ray # for efficient multiprocessing
+import warnings
+import numpy as np
+import pandas as pd
+import random  # library to generate random numbers
+
+np.random.seed(seed=42)
+import matplotlib.pyplot as plt  # For plotting
+from numpy import math as m
+from tqdm import tqdm
+
 class GeneticAlgorithmTSP:
 
-    """This class implements all the methods required to apply genetic algorithm to Travelling Salesman Problem."""
+    """This class implements all the methods required to apply genetic algorithm
+     to Travelling Salesman Problem."""
 
     def __init__(
         self,
@@ -20,9 +32,11 @@ class GeneticAlgorithmTSP:
         self.percentage_to_mutate = percentage_to_mutate
         self.percentage_to_crossover = percentage_to_crossover
         self.dist_mat = dist_mat
+        self.cross_over_df = None
+        self.elite_few_df = None
 
     # generate an initial random route
-    def getRoute(self):
+    def get_route(self) -> list:
         """ This function generates a route by sampling numbers."""
         np.random.seed(seed=42)
         my_randoms = random.sample(
@@ -30,102 +44,121 @@ class GeneticAlgorithmTSP:
         )  # excluding 0 from the range as 0 is the starting point for us i.e Bangalore
         return my_randoms
 
-    # We define a fitness criteria (here the fitness criteria is the distance travelled if a particular route is taken)
-    def fitnessFunction(self, route):
+    """We define a fitness criteria (here the fitness criteria is the distance
+     travelled if a particular route is taken)"""
+    @ray.remote
+    def fitness_function(self, route) -> int:
         """This functions takes the route generated and returns the cost incurred.
         Example :
                 input : [8, 3, 5, 7, 1, 9, 10, 4, 6, 2]
                 output : 17514
 
         Implementation:
-                fitnessFunction([8, 3, 5, 7, 1, 9, 10, 4, 6, 2])
+                fitness_function([8, 3, 5, 7, 1, 9, 10, 4, 6, 2])
                 output: 17514
         """
-        traverseData = self.dist_mat.copy()  # creating a copy of the original df
-        sourcePoint = 0  # defining a starting point
-        stopsCovered = 0  # setting the number of stops covered to 0
-        routeCost = 0  # setting the initial cost to 0
+        traverse_data = self.dist_mat.copy()  # creating a copy of the original df
+        source_point = 0  # defining a starting point
+        stops_covered = 0  # setting the number of stops covered to 0
+        route_cost = 0  # setting the initial cost to 0
         route1 = route  # + [pvRouteMap[0]]
         # initiate a while loop and calculate the cost for the whole path traversed and return the cost
-        while stopsCovered < len(route1):
-            routeCost = routeCost + traverseData.iloc[sourcePoint, route1[stopsCovered]]
+        while stops_covered < len(route1):
+            route_cost = route_cost + traverse_data.iloc[source_point, route1[stops_covered]]
             """route cost is the sum of the cost incurred from travelling from one point to the next according
 			to the route that was generated previously."""
-            sourcePoint = route1[
-                stopsCovered
+            source_point = route1[
+                stops_covered
             ]  # update the source point to the next point in the route
-            stopsCovered = stopsCovered + 1  # Adding 1 to the stops covered
-        routeCost = routeCost + traverseData.iloc[route1[-1], 0]
-        return routeCost
+            stops_covered = stops_covered + 1  # Adding 1 to the stops covered
+        route_cost = route_cost + traverse_data.iloc[route1[-1], 0]
+        return route_cost
 
-    # Generate an initial population of random routes (generally we generate a large number of initial routes)
-    def initialPopCost(self):
+    """Generate an initial population
+     of random routes (generally we generate a large number of initial 
+     routes)"""
+    def initial_pop_cost(self) -> pd.DataFrame:
         """This function generates routes and calculates the cost of the routes.
-        returns a dataframe of routes and the cost."""
+
+        Returns: dataframe of routes and the cost."""
         np.random.seed(seed=42)
         ninitpop = self.initial_pop_size
         intial_cost = 0
-        routeCost = []
+        route_cost = []
+        # generate ninitpop routes
         routes = [
-            self.getRoute() for i in range(0, ninitpop)
-        ]  # generate ninitpop routes
-        routes_Cost = [
-            self.fitnessFunction(i) for i in routes
-        ]  # calculate the fitness criteria
-        routes_DF = pd.DataFrame([routes, routes_Cost]).transpose()
-        routes_DF.columns = ["Route", "Cost"]
-        routes_DF = routes_DF.sort_values("Cost")
-        self.sorted_population = routes_DF
-        return routes_DF
+            self.get_route() for i in range(0, ninitpop)
+        ]  
+        # calculate the fitness criteria
+        routes_cost = ray.get([self.fitness_function.remote(self,i) for i in routes])
+        routes_df = pd.DataFrame([routes, routes_cost]).transpose()
+        routes_df.columns = ["Route", "Cost"]
+        routes_df = routes_df.sort_values("Cost")
+        self.sorted_population = routes_df
+        return routes_df
 
     # Here we follow the elitist approach
-    # Sort the routes based on the distance travelled (cost) and take the elite ones
+    """Sort the routes based on the distance travelled (cost)
+     and take the elite ones"""
 
-    def theEliteFew(self):
+    def the_elite_few(self) -> pd.DataFrame:
         """This functions picks 'nelite' number of best performing solutions.
-        Takes input of population sorted based on the cost and returns the top 'nelite' solutions.
+        Takes input of population sorted based on the cost
+        Returns: top 'nelite' solutions.
         """
         elite_few = self.sorted_population.head(self.nelite)
         self.elite_few_df = elite_few
         return elite_few
 
-    def getMutatedPath(self, initPath, mutateFactor):
+    def get_mutated_path(self, init_path: list, mutate_factor: int) -> list:
+        """get_mutated_path takes an input path and a mutate factor,
+         returns mutated path
+        Args:
+            init_path : initial path
+            mutate_factor: index from where the solution parts should be swapped
+
+        Retuns:
+            returns mutated path
+        """
         try:
-            temp1 = initPath[0:mutateFactor]
-            temp2 = initPath[mutateFactor : len(initPath)]
+            temp1 = init_path[0:mutate_factor]
+            temp2 = init_path[mutate_factor : len(init_path)]
             newPath = temp2 + temp1
         except:
-            temp1 = initPath[0 : max(mutateFactor)]
-            temp2 = initPath[max(mutateFactor) :]
+            temp1 = init_path[0 : max(mutate_factor)]
+            temp2 = init_path[max(mutate_factor) :]
             newPath = temp2 + temp1
         return newPath
 
-    def mutationFunction(self, df):
-        """This function mutates n input routes where n is calculated based on the percentage_to_mutate and returns the
+    def mutation_function(self, df):
+        """This function mutates n input routes where n is calculated based on 
+        the percentage_to_mutate and returns the
         corresponding mutated solution and the cost."""
         # random number for mutate factor
         elite_few_df = df
         p = int(round(elite_few_df.shape[0] * self.percentage_to_mutate, 0))
-        pickedRouteMaps = elite_few_df.Route.head(p).tolist()
+        picked_route_maps = elite_few_df.Route.head(p).tolist()
         # pick a new index for every solution
-        mutatedRoute_list = [
-            self.getMutatedPath(i, random.choice(range(0, elite_few_df.shape[0], 1)))
-            for i in pickedRouteMaps
+        mutated_route_list = [
+            self.get_mutated_path(i, random.choice(range(0, elite_few_df.shape[0], 1)))
+            for i in picked_route_maps
         ]
-        mutated_routes_Cost = [self.fitnessFunction(i) for i in mutatedRoute_list]
-        mutated_routes_DF = pd.DataFrame(
-            [mutatedRoute_list, mutated_routes_Cost]
+        mutated_routes_cost = ray.get([self.fitness_function.remote(self,i) for i in mutated_route_list])
+        mutated_routes_df = pd.DataFrame(
+            [mutated_route_list, mutated_routes_cost]
         ).transpose()
-        mutated_routes_DF.columns = ["Route", "Cost"]
-        self.mutated_routes_DF = mutated_routes_DF
-        return mutated_routes_DF
+        mutated_routes_df.columns = ["Route", "Cost"]
+        self.mutated_routes_df = mutated_routes_df
+        return mutated_routes_df
 
-    def crossOverFunction(
+    def cross_over_function(
         self, parent1, parent2, crossover_factor_start_pos=2, crossover_factor_end_pos=6
     ):
-        """This function implements the partially mapped crossover by goldeberg (https://www.hindawi.com/journals/cin/2017/7430125/)
+        """This function implements the partially mapped crossover by goldeberg
+         (https://www.hindawi.com/journals/cin/2017/7430125/)
         inputs: 2 parent solutions, crossover start position, crossover end position.
-        crossover start position and  crossover end position are randomly generated in the solution.
+        crossover start position and  crossover end position are randomly 
+        generated in the solution.
         output: 2 child solutions, i.e the crossedover solutions.
         Example :
                 Inputs:
@@ -208,8 +241,9 @@ class GeneticAlgorithmTSP:
 
         return (child1, child2)
 
-    def routesAfterCrossOver(self):
-        """This functions takes in a population and performs crossover on the top_per records.
+    def routes_after_cross_over(self):
+        """This functions takes in a population and performs crossover on the
+         top_per records.
         output is a set of children after the crossover operation."""
         # taking the top_per% of this new df and using crossover
         sorted_pop = self.sorted_population
@@ -219,16 +253,14 @@ class GeneticAlgorithmTSP:
         top_few = sorted_pop.head(tp)
         routes_crossover = []
         ind = top_few.index.tolist()
-        for i in range(
-            int(top_few.shape[0])
-        ):  # for every row randomly pick a pair to crossover
+        for i in tqdm(range(int(top_few.shape[0])), desc= "Crossover"):  # for every row randomly pick a pair to crossover
             try:
                 indexes = random.sample(ind, 2)
                 temp1, temp2 = (
                     top_few.iloc[top_few.index == indexes[0]].Route.tolist()[0],
                     top_few.iloc[top_few.index == indexes[1]].Route.tolist()[0],
                 )
-                sol1, sol2 = self.crossOverFunction(temp1, temp2)
+                sol1, sol2 = self.cross_over_function(temp1, temp2)
                 routes_crossover.extend([sol1, sol2])
             except:
                 pass
@@ -238,18 +270,18 @@ class GeneticAlgorithmTSP:
                 ind.remove(indexes[1])
             except:
                 pass
-        cost_crossover = [self.fitnessFunction(i) for i in routes_crossover]
-        cross_over_DF = pd.DataFrame(
+        cost_crossover = ray.get([self.fitness_function.remote(self,i) for i in routes_crossover])
+        cross_over_df = pd.DataFrame(
             [routes_crossover, cost_crossover],
         ).transpose()
-        cross_over_DF.columns = ["Route", "Cost"]
-        self.cross_over_DF = cross_over_DF
-        return cross_over_DF
-
+        cross_over_df.columns = ["Route", "Cost"]
+        self.cross_over_df = cross_over_df
+        return cross_over_df
 
 class OverallGaRun(GeneticAlgorithmTSP):
     """Inherits GeneticAlgorithmTSP class"""
-
+    # Start Ray.
+    ray.init(ignore_reinit_error=True)
     def __init__(
         self,
         noverall,
@@ -268,46 +300,49 @@ class OverallGaRun(GeneticAlgorithmTSP):
             percentage_to_crossover,
             dist_mat,
         )
-        self.noverall = noverall
+        self.noverall = noverall # overall runs of the GA
         cities_mapping = {}
-        for i in enumerate(self.dist_mat.columns):
+        for i in enumerate(tqdm(self.dist_mat.columns,desc = "Cities Mapping")):
             cities_mapping[i[0]] = i[1]
         self.cities_mapping = cities_mapping
 
-    def runOverallGa(self):
+    def run_overall_ga(self):
         possible_solutions = m.factorial(self.number_of_cities - 1)
         ninitpop = self.initial_pop_size
         ## create an empty dataframe to store the solutions
         all_solutions_generated = pd.DataFrame(columns=["Route", "Cost"])
-        # start a for loop and run the whole process for mentioned number of times
+        """start a for loop and run the whole process for mentioned number
+         of times"""
         print("Starting {} iterations of the GA".format(self.noverall))
         # generating initial population
         """We only generate a population initially, after  the first run ,
-		we take the best solutions from the previous run and continue with the process"""
+		we take the best solutions from the previous run and continue with
+         the process"""
         if all_solutions_generated.shape[0] == 0:
-            initial_pop_cost = self.initialPopCost()
+            initial_pop_cost = self.initial_pop_cost()
             sorted_init_pop = initial_pop_cost.sort_values("Cost")
         else:
             sorted_init_pop = all_solutions_generated.head(self.initial_pop_size)
 
         # selecting the elite few
-        elite_few_df = self.theEliteFew()
+        elite_few_df = self.the_elite_few()
         best_sol = []
-        # Generating a random number based on which we either mutate or do a crossover
-        matingFactor = np.random.uniform(
+        """Generating a random number based on which we either
+         mutate or do a crossover"""
+        mating_factor = np.random.uniform(
             0, 1, 1
         )  # Random pick to decide on Mutation / crossover
 
         for i in range(self.noverall):
-            if matingFactor < 0.15:
-                mutatedPopulationWthCost = self.mutationFunction(
+            if mating_factor < 0.15:
+                mutated_population_wth_cost = self.mutation_function(
                     all_solutions_generated
                 )
-                all_solutions_generated.append(mutatedPopulationWthCost)
+                all_solutions_generated.append(mutated_population_wth_cost)
             else:
-                crossoverPopulation = self.routesAfterCrossOver()
+                crossover_population = self.routes_after_cross_over()
                 all_solutions_generated = all_solutions_generated.append(
-                    crossoverPopulation
+                    crossover_population
                 )
 
             all_solutions_generated.Route = all_solutions_generated.Route.map(
@@ -324,10 +359,11 @@ class OverallGaRun(GeneticAlgorithmTSP):
             )
 
         print(
-            "-------------------------------------------------------------------------------------------"
+            "-----------------------------------------------------------------"
         )
         print(
-            "Best solution for initial population size of {} and number of runs {} is \n {}".format(
+            """Best solution for initial population size of {} and number 
+            of runs {} is \n {}""".format(
                 self.initial_pop_size,
                 self.noverall,
                 all_solutions_generated.sort_values("Cost").head(1),
@@ -336,7 +372,7 @@ class OverallGaRun(GeneticAlgorithmTSP):
         print(
             "Generated {}({}%) of the {} solutions".format(
                 all_solutions_generated.shape[0],
-                np.round((len(all_solutions_generated) / possible_solutions) * 100, 3),
+        np.round((len(all_solutions_generated) / possible_solutions) * 100,3),
                 possible_solutions,
             )
         )
@@ -348,41 +384,33 @@ class OverallGaRun(GeneticAlgorithmTSP):
         for i in final_sol.Route.values[0]:
             final_route.append(self.cities_mapping[i])
         final_route = [starting_point] + final_route + [starting_point]
-
-        total_cost = self.fitnessFunction(list(final_sol.Route.values[0]))
+        total_cost = ray.get(self.fitness_function.remote(self,list(final_sol.Route.values[0])))
 
         print(
-            "Total distance travelled to cover the final route of \n {} is {} KM. (Generated from initial population size of {})".format(
+            """Total distance travelled to cover the final route of \n {} is {} KM.
+             (Generated from initial population size of {})""".format(
                 " => ".join(final_route), total_cost, self.initial_pop_size
             )
         )
         print(
-            "-------------------------------------------------------------------------------------------"
+            "-----------------------------------------------------------------"
         )
         best_sol.append(final_sol)
 
-        return (final_sol, self.fitnessFunction(list(final_sol.Route.values[0])))
+        return (final_sol,total_cost)
 
 
 if __name__ != "__main__":
-    import warnings
-    import numpy as np
-    import pandas as pd
-    import random  # library to generate random numbers
-
-    np.random.seed(seed=42)
-    import matplotlib.pyplot as plt  # For plotting
-    from numpy import math as m
-    import matplotlib.pyplot as plt
-
     try:
         from geopy.geocoders import Nominatim
     except ModuleNotFoundError:
         warnings.warn(
             """Could not load geopy,
-			the package is either not available for the os you are using or is not available 
-            in the scope of the class.This will not affect the functionality of the class,
-			you cannot generate plots""",
+			the package is either not available for the os you are using or
+            is not available in the scope of the class.This will not affect
+            the functionality of the class,
+			you cannot generate plots
+            """,
             stacklevel=1,
         )
     try:
@@ -390,9 +418,10 @@ if __name__ != "__main__":
     except ModuleNotFoundError:
         warnings.warn(
             """Could not load folium,
-			the package is either not available for the os you are using or is not available
-            in the scope of the class.This will not affect the functionality of the class,
-			you cannot generate plots""",
+			the package is either not available for the os you are using or
+            is not availablein the scope of the class.This will not affect
+            the functionality of the class,
+            you cannot generate plots""",
             stacklevel=1,
         )
     try:
@@ -400,9 +429,10 @@ if __name__ != "__main__":
     except ModuleNotFoundError:
         warnings.warn(
             """Could not load branca,
-			the package is either not available for the os you are using or is not available
-            in the scope of the class.This will not affect the functionality of the class,
-			you cannot generate plots""",
+            the package is either not available for the os you are using or
+            is not available in the scope of the class.This will not affect
+            the functionality of the class,
+            you cannot generate plots""",
             stacklevel=1,
         )
     with warnings.catch_warnings():
