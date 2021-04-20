@@ -88,3 +88,5 @@ _2. The map needs access to city_lat_lon data, in the code to the file that is a
 _3. basemap is now deprecated, will update the plots with new code when I find a package which can generate these kind of plots, if you have any suggestions, please forward them to [Chaithanya Kumar](mailto:chaithanyakumar.ds@gmail.com?subject=[GitHub][GeneeticAlgorithmTSP]%20plot%20library%20suggestion)
     
     Update: Added plot support with folium and branca, updated the requirements file and lat lon file with required format data.
+
+    Update 20-04-2021: Fitness value calculation is now using ray multiprocessing to speed up the process.
