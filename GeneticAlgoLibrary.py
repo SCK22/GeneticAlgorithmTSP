@@ -130,19 +130,18 @@ class GeneticAlgorithmTSP:
             newPath = temp2 + temp1
         return newPath
 
-    def mutation_function(self, df):
+    def mutation_function(self, elite_few_df):
         """This function mutates n input routes where n is calculated based on 
         the percentage_to_mutate and returns the
         corresponding mutated solution and the cost."""
         # random number for mutate factor
-        elite_few_df = df
         p = int(round(elite_few_df.shape[0] * self.percentage_to_mutate, 0))
         picked_route_maps = elite_few_df.Route.head(p).tolist()
         # pick a new index for every solution
-        mutated_route_list = [
-            self.get_mutated_path(i, random.choice(range(0, elite_few_df.shape[0], 1)))
-            for i in picked_route_maps
-        ]
+        mutated_route_list = []
+        for i in tqdm(picked_route_maps, desc= "Mutation"):
+           mutated_route_list.append(self.get_mutated_path(i, random.choice(range(0, len(elite_few_df.Route[0]), 1))))
+            
         mutated_routes_cost = ray.get([self.fitness_function.remote(self,i) for i in mutated_route_list])
         mutated_routes_df = pd.DataFrame(
             [mutated_route_list, mutated_routes_cost]
@@ -334,7 +333,7 @@ class OverallGaRun(GeneticAlgorithmTSP):
         )  # Random pick to decide on Mutation / crossover
 
         for i in range(self.noverall):
-            if mating_factor < 0.15:
+            if mating_factor < 0.2:
                 mutated_population_wth_cost = self.mutation_function(
                     all_solutions_generated
                 )
